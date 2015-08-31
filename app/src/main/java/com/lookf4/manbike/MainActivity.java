@@ -8,6 +8,7 @@ import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.BitmapDescriptor;
 import com.baidu.mapapi.map.BitmapDescriptorFactory;
 import com.baidu.mapapi.map.MapView;
+import com.baidu.mapapi.map.Marker;
 import com.baidu.mapapi.map.MarkerOptions;
 import com.baidu.mapapi.map.MyLocationConfiguration;
 import com.baidu.mapapi.map.MyLocationData;
@@ -35,6 +36,7 @@ import android.widget.Button;
 import com.baidu.mapapi.*;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -288,7 +290,7 @@ public class MainActivity extends Activity {
 
             // 开启定位图层
             mBaiduMap.setMyLocationEnabled(true);
-            mBaiduMap.setMaxAndMinZoomLevel(20, 17);
+            mBaiduMap.setMaxAndMinZoomLevel(20, 15);
             // 构造定位数据
             MyLocationData locData = new MyLocationData.Builder()
                     .accuracy(location.getRadius())
@@ -329,20 +331,22 @@ public class MainActivity extends Activity {
         }
     };
 
+    private boolean isTextShown = false;
+
     public void markBikeStation(){
-        ArrayList<StationModel> stationList = new ArrayList<StationModel>();
+        List<StationModel> stationList = new ArrayList<StationModel>();
         stationList = mService.getStationsAroundData(MainActivity.this.coord);
 
         //定义Maker坐标点
         LatLng sourceLatLng = null;
-        for (StationModel sm : stationList) {
+        for (final StationModel sm : stationList) {
             // 将GPS设备采集的原始GPS坐标转换成百度坐标
             CoordinateConverter converter  = new CoordinateConverter();
             converter.from(CoordinateConverter.CoordType.COMMON);
             sourceLatLng = new LatLng(sm.getLat(), sm.getLng());
             // sourceLatLng待转换坐标
             converter.coord(sourceLatLng);
-            LatLng desLatLng = converter.convert();
+            final LatLng desLatLng = converter.convert();
 
             //构建Marker图标
             BitmapDescriptor bitmap = BitmapDescriptorFactory
@@ -350,36 +354,54 @@ public class MainActivity extends Activity {
             //构建MarkerOption，用于在地图上添加Marker
             OverlayOptions option = new MarkerOptions()
                     .position(desLatLng)
-                    .icon(bitmap)
-                    .title(sm.getName());
+                    .icon(bitmap);
 
-            OverlayOptions textOptionName = new TextOptions()
-                    .position(new LatLng(desLatLng.latitude - 0.0001, desLatLng.longitude))
-                    .zIndex(20)
-                    .fontSize(48)
-                    .fontColor(0xFFFF00FF)
-                    .text("名称:" + sm.getName());
+            BaiduMap.OnMapDoubleClickListener listener = new BaiduMap.OnMapDoubleClickListener() {
+                /**
+                 * 地图 Marker 覆盖物点击事件监听函数
+                 * @param marker 被点击的 marker
+                 */
+                public void onMapDoubleClick(LatLng point){
+                    if(!isTextShown) {
+                        addTextOnMap(desLatLng, sm);
+                        isTextShown = true;
+                    }else{
 
-            OverlayOptions textOptionAvailable = new TextOptions()
-                    .position(new LatLng(desLatLng.latitude - 0.0005, desLatLng.longitude))
-                    .zIndex(20)
-                    .fontSize(48)
-                    .fontColor(0xFFFF00FF)
-                    .text("可用:" + sm.getAvailable());
+                    }
+                }
+            };
 
-            OverlayOptions textOptionEmpty = new TextOptions()
-                    .position(new LatLng(desLatLng.latitude - 0.0009, desLatLng.longitude))
-                    .zIndex(20)
-                    .fontSize(48)
-                    .fontColor(0xFFFF00FF)
-                    .text("空位:" + (sm.getCapacity() - sm.getAvailable()));
-
-            mBaiduMap.addOverlay(textOptionName);
-            mBaiduMap.addOverlay(textOptionAvailable);
-            mBaiduMap.addOverlay(textOptionEmpty);
             //在地图上添加Marker，并显示
             mBaiduMap.addOverlay(option);
+            mBaiduMap.setOnMapDoubleClickListener(listener);
         }
+    }
+
+    private void addTextOnMap(LatLng desLatLng, StationModel sm){
+        OverlayOptions textOptionName = new TextOptions()
+                .position(new LatLng(desLatLng.latitude - 0.0001, desLatLng.longitude))
+                .zIndex(20)
+                .fontSize(48)
+                .fontColor(0xFFFF00FF)
+                .text("名称:" + sm.getName());
+
+        OverlayOptions textOptionAvailable = new TextOptions()
+                .position(new LatLng(desLatLng.latitude - 0.0005, desLatLng.longitude))
+                .zIndex(20)
+                .fontSize(48)
+                .fontColor(0xFFFF00FF)
+                .text("可用:" + sm.getAvailable());
+
+        OverlayOptions textOptionEmpty = new TextOptions()
+                .position(new LatLng(desLatLng.latitude - 0.0009, desLatLng.longitude))
+                .zIndex(20)
+                .fontSize(48)
+                .fontColor(0xFFFF00FF)
+                .text("空位:" + (sm.getCapacity() - sm.getAvailable()));
+
+        mBaiduMap.addOverlay(textOptionName);
+        mBaiduMap.addOverlay(textOptionAvailable);
+        mBaiduMap.addOverlay(textOptionEmpty);
     }
 
     @Override
@@ -387,6 +409,7 @@ public class MainActivity extends Activity {
         super.onDestroy();
         //在activity执行onDestroy时执行mMapView.onDestroy()，实现地图生命周期管理
         mMapView.onDestroy();
+        unbindService(conn);
     }
     @Override
     protected void onResume() {

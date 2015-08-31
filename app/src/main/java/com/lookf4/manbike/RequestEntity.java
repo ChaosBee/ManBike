@@ -11,6 +11,8 @@ import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by jarbar on 15/8/30.
@@ -20,6 +22,15 @@ public class RequestEntity {
 
     private String key;
     private ArrayList<Double> coord;
+    private int radius;
+
+    public int getRadius() {
+        return radius;
+    }
+
+    public void setRadius(int radius) {
+        this.radius = radius;
+    }
 
     public String getKey() {
         return key;
@@ -55,7 +66,7 @@ public class RequestEntity {
         this.setKey(key);
     };
 
-    public ArrayList<StationModel> getBikeStationsAround(){
+    public List<StationModel> getBikeStationsAround(){
         String url = this.getUrl();
         Document ibike = null;
         try {
@@ -67,30 +78,38 @@ public class RequestEntity {
 
         String response = ibike.toString();
         JSONArray array = new JSONArray();
-        ArrayList<StationModel> ibikesList = new ArrayList<StationModel>();
+        HashMap<Integer, StationModel> idStationMap = new HashMap<Integer, StationModel>();
         try {
             JSONObject json = new JSONObject(response.split("=")[1]);
             array = json.getJSONArray("station");
             for (int i = 0; i < array.length(); i++) {
                 JSONObject item = array.getJSONObject(i);
-                ibikesList.add(StationModel.parse(item));
+                idStationMap.put(item.getInt("id"), StationModel.parse(item));
             }
         } catch (JSONException e) {
             Log.d(TAG, "json parse error");
             e.printStackTrace();
         }
-        return ibikesList;
+
+        List<StationModel> stationModels = new ArrayList<StationModel>(idStationMap.values());
+        return stationModels;
     }
 
     private String getUrl(){
         String baseUrl = "http://ws.uibike.com/wx.station.php?";
-        String keyParam = "k=" + this.key + "&";
-        String location = "myloc=" + TextUtils.join(",", this.coord) + "&";
-        String other = "&e=1&d=2";
-        return baseUrl + location + keyParam + other;
+        String location = "myloc=" + TextUtils.join(",", this.coord);
+        String keyParam = "&k=" + this.key;
+        String radius = "&d=" + this.radius;
+        String other = "&e=1";
+        return baseUrl + location + keyParam + radius + other;
     }
 
     public void init(ArrayList<Double> coord){
+        this.init(coord, 2);//default 2
+    }
+
+    public void init(ArrayList<Double> coord, int radius){
+        this.setRadius(radius);
         this.setCoord(coord);
         this.fetchKey();
     }
