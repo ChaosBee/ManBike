@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        jar="/Users/jarbar/StudioProjects/ManBike/app/build/intermediates/exploded-aar/com.android.support/support-v4/22.1.1/jars/classes.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="c95ba8152923e4872e86a82cfcba9a51c0214328">
+        <dex dex="/Users/jarbar/StudioProjects/ManBike/app/build/intermediates/pre-dexed/debug/classes-92c0e61bcf78d61748ee8e82711630c23198e124.jar" />
+    </item>
+    <item
+        jar="/Users/jarbar/StudioProjects/ManBike/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/22.1.1/jars/classes.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="a3ff3c506644c820eb2bdf06e8339f72be578551">
+        <dex dex="/Users/jarbar/StudioProjects/ManBike/app/build/intermediates/pre-dexed/debug/classes-508b65f634fc942a0f905cb44464df69cfa885af.jar" />
+    </item>
+    <item
+        jar="/Users/jarbar/StudioProjects/ManBike/app/libs/jsoup-1.8.3.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="3a86e137575e4a45f5a9eec407f8135512e823a2">
+        <dex dex="/Users/jarbar/StudioProjects/ManBike/app/build/intermediates/pre-dexed/debug/jsoup-1.8.3-f4d218aa0f5b2ee6f1998b31203947fda2bc2a65.jar" />
+    </item>
+    <item
+        jar="/Users/jarbar/StudioProjects/ManBike/app/build/intermediates/exploded-aar/com.android.support/support-v4/22.1.1/jars/libs/internal_impl-22.1.1.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="9e070ad32b2700b0343e8e0cccc437733d91ba3a">
+        <dex dex="/Users/jarbar/StudioProjects/ManBike/app/build/intermediates/pre-dexed/debug/internal_impl-22.1.1-da4b99119b4ab53dca081e30413289a2630aa8ab.jar" />
+    </item>
+    <item
+        jar="/Users/jarbar/Library/Android/sdk/extras/android/m2repository/com/android/support/support-annotations/22.1.1/support-annotations-22.1.1.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="01d051a6bfb1218b1db2d3a5af0480ac2c25c42a">
+        <dex dex="/Users/jarbar/StudioProjects/ManBike/app/build/intermediates/pre-dexed/debug/support-annotations-22.1.1-f9f876fdfa837a619d0e2470d93cbb60ddd772e1.jar" />
+    </item>
+    <item
+        jar="/Users/jarbar/StudioProjects/ManBike/app/libs/BaiduLBS_Android.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="ab9bcf1c8ab7369fdd8840caf53fa7f8b84e2713">
+        <dex dex="/Users/jarbar/StudioProjects/ManBike/app/build/intermediates/pre-dexed/debug/BaiduLBS_Android-abf627f4be91789b818a53f8d694272894c6f492.jar" />
+    </item>
+
+</items>
